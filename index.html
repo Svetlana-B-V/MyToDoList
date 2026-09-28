@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/styles/style.css">
+    <title>Список дел с календарём</title>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Левая половина: Календарь -->
+        <section class="calendar-section">
+            <div class="calendar-header">
+                <button id="prevMonthBtn" class="month-nav">&lt;</button>
+                <h2 id="currentMonthYear"></h2>
+                <button id="nextMonthBtn" class="month-nav">&gt;</button>
+            </div>
+            <div class="weekdays">
+                <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
+            </div>
+            <div id="calendarGrid" class="calendar-grid"></div>
+            <p id="selectedDateInfo" class="selected-date-info"></p>
+        </section>
+
+        <!-- Правая половина: Список дел -->
+        <section class="todo-section">
+            <h1> Мои задачи</h1>
+
+            <!-- Форма добавления задачи -->
+            <div class="add-task-panel">
+                <div class="main-input-row">
+                    <input type="text" id="taskInput" placeholder="Новая задача...">
+                    <button id="addTaskBtn" class="gradient-btn">Добавить</button>
+                </div>
+                <div class="extra-options">
+                    <div class="option-group">
+                        <label for="dueDateInput">Дата: </label>
+                        <input type="date" id="dueDateInput">
+                    </div>
+                    <div class="option-group">
+                        <label for="prioritySelect">Приоритет: </label>
+                        <select id="prioritySelect">
+                            <option value="low">Низкий</option>
+                            <option value="medium" selected>Средний</option>
+                            <option value="high">Высокий</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Контейнер для задач (теперь под формой) -->
+            <div id="tasksContainer" class="tasks-container"></div>
+        </section>
+    </div>
+
+    <script src="assets/scripts/script.js"></script>
+</body>
+</html>
