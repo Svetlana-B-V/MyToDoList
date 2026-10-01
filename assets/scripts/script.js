@@ -1,26 +1,27 @@
 // === DOM элементы ===
-const addBtn = document.getElementById("addTaskBtn");
-const taskInput = document.getElementById("taskInput");
-const dueDateInput = document.getElementById("dueDateInput");
-const prioritySelect = document.getElementById("prioritySelect");
-const tasksContainer = document.getElementById("tasksContainer");
-const calendarGrid = document.getElementById("calendarGrid");
-const currentMonthYear = document.getElementById("currentMonthYear");
-const prevMonthBtn = document.getElementById("prevMonthBtn");
-const nextMonthBtn = document.getElementById("nextMonthBtn");
-const selectedDateInfo = document.getElementById("selectedDateInfo");
+const addBtn            = document.getElementById("addTaskBtn");
+const taskInput         = document.getElementById("taskInput");
+const dueDateInput      = document.getElementById("dueDateInput");
+const prioritySelect    = document.getElementById("prioritySelect");
+const tasksContainer    = document.getElementById("tasksContainer");
+const calendarGrid      = document.getElementById("calendarGrid");
+const currentMonthYear  = document.getElementById("currentMonthYear");
+const prevMonthBtn      = document.getElementById("prevMonthBtn");
+const nextMonthBtn      = document.getElementById("nextMonthBtn");
+const selectedDateInfo  = document.getElementById("selectedDateInfo");
+const themeToggle       = document.getElementById("themeToggle");
 
 // === Глобальные переменные ===
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 let currentDisplayDate = new Date();
-let selectedDate = new Date().toISOString().slice(0,10);
+let selectedDate = new Date().toISOString().slice(0, 10);
 let filterByDate = null;
 
 // === Форматирование даты без смещения ===
 function formatLocalDate(date) {
-    const year = date.getFullYear();
+    const year  = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
+    const day   = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
 }
 
@@ -34,8 +35,55 @@ function formatShortDate(dateStr) {
     return `${d}.${m}`;
 }
 
+// === Переключатель темы ===
+function updateToggleA11y(theme) {
+    if (!themeToggle) return;
+    themeToggle.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+    themeToggle.setAttribute(
+        'aria-label',
+        theme === 'dark' ? 'Включить светлую тему' : 'Включить тёмную тему'
+    );
+}
+
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    try { localStorage.setItem('theme', theme); } catch (e) {}
+
+    // Меняем цвет адресной строки в мобильных браузерах
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', theme === 'dark' ? '#12121f' : '#f9f7fc');
+
+    updateToggleA11y(theme);
+}
+
+function initTheme() {
+    let theme;
+    try { theme = localStorage.getItem('theme'); } catch (e) {}
+    if (!theme) {
+        theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    applyTheme(theme);
+
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+
+            // Включаем плавный переход на время смены темы
+            document.documentElement.classList.add('theme-transition');
+            applyTheme(next);
+
+            window.setTimeout(() => {
+                document.documentElement.classList.remove('theme-transition');
+            }, 500);
+        });
+    }
+}
+
 // === Инициализация ===
 (function init() {
+    initTheme();
+
     const today = new Date();
     const todayStr = formatLocalDate(today);
     dueDateInput.value = todayStr;
@@ -76,6 +124,7 @@ function saveTasks() {
 function renderTasks() {
     tasksContainer.innerHTML = '';
     let filteredTasks = tasks;
+
     if (filterByDate) {
         filteredTasks = tasks.filter(t => t.dueDate === filterByDate);
         selectedDateInfo.textContent = `Задачи на ${formatDate(filterByDate)}`;
@@ -86,7 +135,7 @@ function renderTasks() {
     if (filteredTasks.length === 0) {
         const emptyMsg = document.createElement('p');
         emptyMsg.textContent = 'Нет задач';
-        emptyMsg.style.color = '#9896bb';
+        emptyMsg.style.color = 'var(--text-muted)';
         emptyMsg.style.textAlign = 'center';
         emptyMsg.style.padding = '1rem';
         tasksContainer.appendChild(emptyMsg);
@@ -164,11 +213,11 @@ function renderTasks() {
 
 // === Рендер календаря ===
 function renderCalendar() {
-    const year = currentDisplayDate.getFullYear();
+    const year  = currentDisplayDate.getFullYear();
     const month = currentDisplayDate.getMonth();
 
     const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
+    const lastDay  = new Date(year, month + 1, 0);
     const startDayOfWeek = (firstDay.getDay() + 6) % 7;
 
     currentMonthYear.textContent = firstDay.toLocaleString('ru', { month: 'long', year: 'numeric' });
@@ -206,8 +255,8 @@ function renderCalendarCell(date, dateStr, isOtherMonth) {
 
     let classes = 'calendar-cell';
     if (isOtherMonth) classes += ' other-month';
-    if (isToday) classes += ' today';
-    if (hasTasks) classes += ' has-tasks';
+    if (isToday)      classes += ' today';
+    if (hasTasks)     classes += ' has-tasks';
 
     return `<div class="${classes}" data-date="${dateStr}">
         <span class="day-number">${day}</span>
@@ -254,7 +303,7 @@ addBtn.addEventListener('click', () => {
         return;
     }
 
-    const dueDate = dueDateInput.value;
+    const dueDate  = dueDateInput.value;
     const priority = prioritySelect.value;
 
     const newTask = {
@@ -274,4 +323,11 @@ addBtn.addEventListener('click', () => {
     taskInput.value = '';
     prioritySelect.value = 'medium';
     showNotification('Задача добавлена', 'success');
+});
+
+// === Добавление задачи по Enter ===
+taskInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        addBtn.click();
+    }
 });

@@ -1,3 +1,104 @@
+/* ============================================================
+   ПЕРЕМЕННЫЕ ТЕМ
+   ============================================================ */
+:root,
+html[data-theme="light"] {
+    --bg-page:          #f9f7fc;
+    --bg-container:     rgba(255, 255, 255, 0.7);
+    --bg-surface:       #ffffff;
+    --bg-surface-soft:  #f2edf9;
+    --bg-surface-alt:   #fcfbfe;
+    --bg-input:         #ffffff;
+    --bg-panel:         rgba(255, 255, 255, 0.84);
+
+    --text-primary:     #344979;
+    --text-secondary:   #5d6da5;
+    --text-muted:       #9896bb;
+    --text-faded:       #b0aec7;
+    --text-strong:      #1e2b4f;
+
+    --border-soft:      #e6e0f0;
+    --border-medium:    #ddd4f0;
+    --border-input:     #c6c6e8;
+
+    --accent:           #5d6da5;
+    --accent-light:     #9896bb;
+    --accent-hover:     #e2d9f0;
+    --accent-soft:      #f0eaff;
+    --accent-selected:  #c6c6e8;
+
+    --shadow-container: 0 20px 40px rgba(93, 109, 165, 0.08);
+    --shadow-panel:     0 6px 12px rgba(93, 109, 165, 0.06);
+    --shadow-task:      0 4px 10px rgba(52, 73, 121, 0.05);
+    --shadow-task-hover:0 8px 18px rgba(52, 73, 121, 0.08);
+    --shadow-inset:     inset 0 2px 6px rgba(52, 73, 121, 0.05);
+
+    --scroll-track:     #e6e0f0;
+    --scroll-thumb:     #9896bb;
+
+    --toggle-track:     #e2d9f0;
+    --toggle-knob:      #ffffff;
+    --toggle-icon:      #344979;
+
+    --priority-low:     #6f9abf;
+    --priority-medium:  #3e86f2;
+    --priority-high:    #141472;
+
+    --notification-info:    #9896bb;
+    --notification-success: #5d6da5;
+    --notification-error:   #344979;
+}
+
+html[data-theme="dark"] {
+    --bg-page:          #12121f;
+    --bg-container:     rgba(30, 30, 48, 0.75);
+    --bg-surface:       #1e1e30;
+    --bg-surface-soft:  #262640;
+    --bg-surface-alt:   #1a1a2b;
+    --bg-input:         #262640;
+    --bg-panel:         rgba(30, 30, 48, 0.88);
+
+    --text-primary:     #e6e6f5;
+    --text-secondary:   #a8b0d8;
+    --text-muted:       #7a7fa8;
+    --text-faded:       #555a80;
+    --text-strong:      #ffffff;
+
+    --border-soft:      #2f2f4a;
+    --border-medium:    #3a3a5c;
+    --border-input:     #3f3f63;
+
+    --accent:           #8a8fd4;
+    --accent-light:     #6a6ea8;
+    --accent-hover:     #2f2f52;
+    --accent-soft:      #2a2a4a;
+    --accent-selected:  #3a3a68;
+
+    --shadow-container: 0 20px 40px rgba(0, 0, 0, 0.45);
+    --shadow-panel:     0 6px 12px rgba(0, 0, 0, 0.35);
+    --shadow-task:      0 4px 10px rgba(0, 0, 0, 0.30);
+    --shadow-task-hover:0 8px 18px rgba(0, 0, 0, 0.45);
+    --shadow-inset:     inset 0 2px 6px rgba(0, 0, 0, 0.35);
+
+    --scroll-track:     #2a2a44;
+    --scroll-thumb:     #555a80;
+
+    --toggle-track:     #2a2a4a;
+    --toggle-knob:      #6a6ea8;
+    --toggle-icon:      #ffe9a8;
+
+    --priority-low:     #5f8ab0;
+    --priority-medium:  #5a9bff;
+    --priority-high:    #8a8fd4;
+
+    --notification-info:    #6a6ea8;
+    --notification-success: #5d6da5;
+    --notification-error:   #8a4a4a;
+}
+
+/* ============================================================
+   БАЗОВЫЕ СТИЛИ
+   ============================================================ */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -6,9 +107,25 @@
 
 body {
     font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
-    background: #f9f7fc;
+    background: var(--bg-page);
+    color: var(--text-primary);
     min-height: 100vh;
     padding: 1.5rem;
+    transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* Плавный переход всех элементов при смене темы */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+    transition:
+        background-color 0.4s ease,
+        color 0.4s ease,
+        border-color 0.4s ease,
+        box-shadow 0.4s ease,
+        fill 0.4s ease,
+        stroke 0.4s ease !important;
 }
 
 .app-container {
@@ -16,15 +133,17 @@ body {
     margin: 0 auto;
     display: flex;
     gap: 2rem;
-    background: rgba(255, 255, 255, 0.7);
+    background: var(--bg-container);
     backdrop-filter: blur(8px);
     border-radius: 32px;
-    box-shadow: 0 20px 40px rgba(93, 109, 165, 0.08);
+    box-shadow: var(--shadow-container);
     padding: 2rem;
-    border: 1px solid #e6e0f0;
+    border: 1px solid var(--border-soft);
 }
 
-/* Левая колонка: календарь */
+/* ============================================================
+   ЛЕВАЯ КОЛОНКА: КАЛЕНДАРЬ
+   ============================================================ */
 .calendar-section {
     flex: 1;
     min-width: 320px;
@@ -35,6 +154,13 @@ body {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 1.5rem;
+    gap: 0.5rem;
+}
+
+.calendar-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .month-nav {
@@ -42,7 +168,7 @@ body {
     border: none;
     font-size: 1.8rem;
     cursor: pointer;
-    color: #5d6da5;
+    color: var(--accent);
     width: 40px;
     height: 40px;
     display: flex;
@@ -52,11 +178,11 @@ body {
     transition: background 0.2s;
 }
 .month-nav:hover {
-    background: #e2d9f0;
+    background: var(--accent-hover);
 }
 
 #currentMonthYear {
-    color: #344979;
+    color: var(--text-primary);
     font-weight: 400;
     font-size: 1.6rem;
 }
@@ -66,7 +192,7 @@ body {
     grid-template-columns: repeat(7, 1fr);
     text-align: center;
     font-weight: 600;
-    color: #5d6da5;
+    color: var(--text-secondary);
     margin-bottom: 0.5rem;
     padding: 0 0.25rem;
 }
@@ -75,10 +201,10 @@ body {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 4px;
-    background: #f2edf9;
+    background: var(--bg-surface-soft);
     padding: 8px;
     border-radius: 20px;
-    box-shadow: inset 0 2px 6px rgba(52, 73, 121, 0.05);
+    box-shadow: var(--shadow-inset);
 }
 
 .calendar-cell {
@@ -87,31 +213,31 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: white;
+    background: var(--bg-surface);
     border-radius: 12px;
     font-weight: 500;
-    color: #344979;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    color: var(--text-primary);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
     cursor: pointer;
     transition: all 0.15s;
     position: relative;
 }
 .calendar-cell:hover {
-    background: #f7e5eb;
+    background: var(--accent-hover);
     transform: scale(0.98);
 }
 .calendar-cell.today {
-    border: 2px solid #5d6da5;
-    background: #f0eaff;
+    border: 2px solid var(--accent);
+    background: var(--accent-soft);
 }
 .calendar-cell.selected {
-    background: #c6c6e8;
-    color: #1e2b4f;
+    background: var(--accent-selected);
+    color: var(--text-strong);
     font-weight: 600;
 }
 .calendar-cell.other-month {
-    color: #b0aec7;
-    background: #fcfbfe;
+    color: var(--text-faded);
+    background: var(--bg-surface-alt);
 }
 .calendar-cell .day-number {
     font-size: 1rem;
@@ -120,22 +246,129 @@ body {
     margin-top: 2px;
     width: 6px;
     height: 6px;
-    background: #5d6da5;
+    background: var(--accent);
     border-radius: 50%;
 }
 .calendar-cell.has-tasks .task-indicator {
-    background: #344979;
+    background: var(--text-primary);
 }
 
 .selected-date-info {
     margin-top: 1rem;
     text-align: center;
-    color: #5d6da5;
+    color: var(--text-secondary);
     font-style: italic;
     cursor: pointer;
 }
 
-/* Правая колонка: задачи */
+/* ============================================================
+   ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ
+   ============================================================ */
+.theme-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+}
+
+.theme-toggle__track {
+    position: relative;
+    display: block;
+    width: 62px;
+    height: 32px;
+    border-radius: 40px;
+    background: var(--toggle-track);
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.15);
+    transition: background 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+/* Звёзды, появляющиеся в тёмной теме */
+.theme-toggle__stars {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.45s ease;
+    pointer-events: none;
+}
+.theme-toggle__stars span {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 4px #fff;
+}
+.theme-toggle__stars span:nth-child(1) { top: 7px;  left: 10px; }
+.theme-toggle__stars span:nth-child(2) { top: 18px; left: 16px; width: 1.5px; height: 1.5px; }
+.theme-toggle__stars span:nth-child(3) { top: 11px; left: 22px; width: 1.5px; height: 1.5px; }
+
+html[data-theme="dark"] .theme-toggle__stars {
+    opacity: 1;
+}
+
+.theme-toggle__knob {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--toggle-knob);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+        transform 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+        background 0.45s ease;
+    z-index: 2;
+}
+
+/* Сдвиг ползунка в тёмной теме */
+html[data-theme="dark"] .theme-toggle__knob {
+    transform: translateX(30px);
+}
+
+.theme-toggle__icon {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    color: var(--toggle-icon);
+    transition: opacity 0.35s ease, transform 0.45s ease;
+}
+
+/* Солнце — видно только в светлой */
+.theme-toggle__icon--sun {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+.theme-toggle__icon--moon {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.6);
+}
+
+html[data-theme="dark"] .theme-toggle__icon--sun {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.6);
+}
+html[data-theme="dark"] .theme-toggle__icon--moon {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+}
+
+.theme-toggle:hover .theme-toggle__track {
+    filter: brightness(1.05);
+}
+.theme-toggle:active .theme-toggle__track {
+    transform: scale(0.96);
+}
+
+/* ============================================================
+   ПРАВАЯ КОЛОНКА: ЗАДАЧИ
+   ============================================================ */
 .todo-section {
     flex: 1;
     display: flex;
@@ -143,7 +376,7 @@ body {
 }
 
 .todo-section h1 {
-    color: #344979;
+    color: var(--text-primary);
     font-weight: 300;
     font-size: 2.5rem;
     margin-bottom: 1.5rem;
@@ -151,13 +384,13 @@ body {
 }
 
 .add-task-panel {
-    background: #ffffffd6;
+    background: var(--bg-panel);
     backdrop-filter: blur(4px);
     padding: 1.5rem;
     border-radius: 28px;
-    box-shadow: 0 6px 12px rgba(93, 109, 165, 0.06);
+    box-shadow: var(--shadow-panel);
     margin-bottom: 2rem;
-    border: 1px solid #ddd4f0;
+    border: 1px solid var(--border-medium);
 }
 
 .main-input-row {
@@ -168,16 +401,19 @@ body {
 #taskInput {
     flex: 1;
     padding: 1rem 1.2rem;
-    border: 2px solid #c6c6e8;
+    border: 2px solid var(--border-input);
     border-radius: 40px;
     font-size: 1rem;
-    background: white;
-    color: #344979;
+    background: var(--bg-input);
+    color: var(--text-primary);
     outline: none;
-    transition: border 0.2s, box-shadow 0.2s;
+    transition: border 0.2s, box-shadow 0.2s, background 0.4s, color 0.4s;
+}
+#taskInput::placeholder {
+    color: var(--text-muted);
 }
 #taskInput:focus {
-    border-color: #5d6da5;
+    border-color: var(--accent);
     box-shadow: 0 0 0 3px rgba(93, 109, 165, 0.15);
 }
 
@@ -215,21 +451,21 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    background: #f2edf9;
+    background: var(--bg-surface-soft);
     padding: 0.4rem 1rem 0.4rem 1.2rem;
     border-radius: 40px;
 }
 .option-group label {
-    color: #344979;
+    color: var(--text-primary);
     font-weight: 500;
 }
 .option-group input,
 .option-group select {
     padding: 0.4rem 0.6rem;
     border-radius: 30px;
-    border: 1px solid #c6c6e8;
-    background: white;
-    color: #344979;
+    border: 1px solid var(--border-input);
+    background: var(--bg-input);
+    color: var(--text-primary);
     font-size: 0.9rem;
     outline: none;
 }
@@ -246,33 +482,28 @@ body {
 
 /* Карточка задачи */
 .task-item {
-    background: white;
+    background: var(--bg-surface);
     border-radius: 20px;
     padding: 1rem 1.5rem;
-    box-shadow: 0 4px 10px rgba(52, 73, 121, 0.05);
+    box-shadow: var(--shadow-task);
     display: flex;
     align-items: center;
     gap: 1rem;
-    border-left: 6px solid #9896bb; /* базовый цвет */
+    border-left: 6px solid var(--accent-light);
     transition: 0.15s;
 }
-.task-item.priority-low {
-    border-left-color: #6f9abf;
-}
-.task-item.priority-medium {
-    border-left-color: #3e86f2;
-}
-.task-item.priority-high {
-    border-left-color: #141472;
-}
+.task-item.priority-low    { border-left-color: var(--priority-low); }
+.task-item.priority-medium { border-left-color: var(--priority-medium); }
+.task-item.priority-high   { border-left-color: var(--priority-high); }
 .task-item:hover {
-    box-shadow: 0 8px 18px rgba(52, 73, 121, 0.08);
+    box-shadow: var(--shadow-task-hover);
 }
 
 .task-item input[type="checkbox"] {
     width: 22px;
     height: 22px;
-    accent-color: #5d6da5;
+    accent-color: var(--accent);
+    cursor: pointer;
 }
 
 .task-content {
@@ -280,17 +511,17 @@ body {
 }
 .task-text {
     font-size: 1.1rem;
-    color: #344979;
+    color: var(--text-primary);
     margin-bottom: 4px;
 }
 .task-meta {
     font-size: 0.8rem;
-    color: #5d6da5;
+    color: var(--text-secondary);
     display: flex;
     gap: 12px;
 }
 .task-meta span {
-    background: #f2edf9;
+    background: var(--bg-surface-soft);
     padding: 2px 8px;
     border-radius: 20px;
 }
@@ -303,20 +534,14 @@ body {
     font-size: 0.75rem;
     font-weight: 600;
     color: white;
-    background: #6f9abf; /* fallback */
+    background: var(--priority-low);
 }
 .priority-low .priority-badge,
-.priority-badge.priority-low {
-    background: #6f9abf;
-}
+.priority-badge.priority-low    { background: var(--priority-low); }
 .priority-medium .priority-badge,
-.priority-badge.priority-medium {
-    background: #3e86f2;
-}
+.priority-badge.priority-medium { background: var(--priority-medium); }
 .priority-high .priority-badge,
-.priority-badge.priority-high {
-    background: #141472;
-}
+.priority-badge.priority-high   { background: var(--priority-high); }
 
 /* Кнопка удаления */
 .delete-btn {
@@ -324,7 +549,7 @@ body {
     border: none;
     font-size: 1.4rem;
     cursor: pointer;
-    color: #b0aec7;
+    color: var(--text-faded);
     padding: 4px 8px;
     border-radius: 30px;
     transition: all 0.15s;
@@ -353,23 +578,25 @@ body {
     transform: translateX(0);
     opacity: 1;
 }
-.notification.info { background: #9896bb; }
-.notification.success { background: #5d6da5; }
-.notification.error { background: #344979; }
+.notification.info    { background: var(--notification-info); }
+.notification.success { background: var(--notification-success); }
+.notification.error   { background: var(--notification-error); }
 
 /* Скролл */
 .tasks-container::-webkit-scrollbar {
     width: 6px;
 }
 .tasks-container::-webkit-scrollbar-track {
-    background: #e6e0f0;
+    background: var(--scroll-track);
     border-radius: 10px;
 }
 .tasks-container::-webkit-scrollbar-thumb {
-    background: #9896bb;
+    background: var(--scroll-thumb);
     border-radius: 10px;
 }
 
+/* Адаптив */
 @media (max-width: 800px) {
     .app-container { flex-direction: column; }
+    .calendar-header { flex-wrap: wrap; }
 }
